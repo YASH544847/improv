@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -21,7 +22,7 @@
             position: relative;
             overflow-x: hidden;
         }
-
+        
         body::before {
             content: '';
             position: absolute;
@@ -32,7 +33,7 @@
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') repeat;
             pointer-events: none;
         }
-
+        
         .container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
@@ -44,7 +45,7 @@
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
             animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
+        
         @keyframes slideUp {
             from {
                 opacity: 0;
@@ -55,12 +56,12 @@
                 transform: translateY(0) scale(1);
             }
         }
-
+        
         .header {
             text-align: center;
             margin-bottom: 2rem;
         }
-
+        
         .title {
             font-size: 2.5rem;
             font-weight: 800;
@@ -70,22 +71,22 @@
             background-clip: text;
             margin-bottom: 0.5rem;
         }
-
+        
         .subtitle {
             color: rgba(255, 255, 255, 0.8);
             font-size: 1.1rem;
             line-height: 1.6;
         }
-
+        
         .highlight {
             color: #fbbf24;
             font-weight: 600;
         }
-
+        
         .input-group {
             margin-bottom: 1.5rem;
         }
-
+        
         .textarea {
             width: 100%;
             min-height: 150px;
@@ -99,18 +100,18 @@
             resize: vertical;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
+        
         .textarea:focus {
             outline: none;
             border-color: rgba(255, 255, 255, 0.4);
             background: rgba(255, 255, 255, 0.15);
             box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
         }
-
+        
         .textarea::placeholder {
             color: rgba(255, 255, 255, 0.6);
         }
-
+        
         .btn {
             width: 100%;
             background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
@@ -125,16 +126,16 @@
             position: relative;
             overflow: hidden;
         }
-
+        
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
         }
-
+        
         .btn:active {
             transform: translateY(0);
         }
-
+        
         .btn::before {
             content: '';
             position: absolute;
@@ -145,18 +146,18 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s;
         }
-
+        
         .btn:hover::before {
             left: 100%;
         }
-
+        
         .loading {
             text-align: center;
             margin: 1.5rem 0;
             color: rgba(255, 255, 255, 0.8);
             font-size: 1.1rem;
         }
-
+        
         .spinner {
             display: inline-block;
             width: 20px;
@@ -167,11 +168,13 @@
             animation: spin 1s linear infinite;
             margin-right: 0.5rem;
         }
-
+        
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
-
+        
         .output {
             background: rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -180,7 +183,7 @@
             margin-top: 1.5rem;
             animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
+        
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -191,20 +194,20 @@
                 transform: translateY(0);
             }
         }
-
+        
         .output-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-
+        
         .output-title {
             color: #fbbf24;
             font-size: 1.2rem;
             font-weight: 600;
         }
-
+        
         .copy-btn {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             border: none;
@@ -216,67 +219,61 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
+        
         .copy-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
         }
-
+        
         .output-text {
             color: rgba(255, 255, 255, 0.9);
             line-height: 1.7;
             white-space: pre-wrap;
             word-wrap: break-word;
         }
-
+        
         .hidden {
             display: none;
         }
-
+        
         .footer {
             text-align: right;
             margin-top: 1.5rem;
             padding-top: 1rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-
+        
         .credit {
             color: rgba(255, 255, 255, 0.6);
             font-size: 0.9rem;
         }
-
+        
         @media (max-width: 640px) {
             .container {
                 padding: 1.5rem;
                 margin: 1rem;
             }
-            
             .title {
                 font-size: 2rem;
             }
-
-
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
             <h1 class="title">🚀 AI Prompt Improver</h1>
             <p class="subtitle">
-                Transform rough prompts into high-performance AI instructions with clear 
-                <span class="highlight">Role</span>, 
-                <span class="highlight">Objective</span>, and 
+                Transform rough prompts into high-performance AI instructions with clear
+                <span class="highlight">Role</span>,
+                <span class="highlight">Objective</span>, and
                 <span class="highlight">Context</span> for better AI responses
             </p>
         </div>
 
         <div class="input-group">
-            <textarea 
-                id="promptInput" 
-                class="textarea" 
-                placeholder="Example: As a UI designer, your objective is to develop a prompt that will improve the performance of an AI prompt system."
-            >As a UI designer, your objective is to develop a prompt that will improve the performance of an AI prompt system.</textarea>
+            <textarea id="promptInput" class="textarea" placeholder="Example: As a UI designer, your objective is to develop a prompt that will improve the performance of an AI prompt system.">As a UI designer, your objective is to develop a prompt that will improve the performance of an AI prompt system.</textarea>
         </div>
 
         <button onclick="improvePrompt()" class="btn">
@@ -299,7 +296,7 @@
         </div>
 
         <div class="footer">
-            <div class="credit">Developed by Yash Raygade</div>
+            <div class="credit">Developed by Yash Patil</div>
         </div>
     </div>
 
@@ -324,7 +321,9 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ prompt })
+                    body: JSON.stringify({
+                        prompt
+                    })
                 });
 
                 const data = await res.json();
@@ -359,8 +358,7 @@
                 improvePrompt();
             }
         });
-
-
     </script>
 </body>
+
 </html>
