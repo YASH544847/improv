@@ -1,514 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="AI-powered prompt improvement tool for better AI interactions">
-    <title>AI Prompt Improver - Enhance Your AI Conversations</title>
-    
-    <!-- Preload critical resources -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #8b5cf6;
-            --accent: #06b6d4;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --error: #ef4444;
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text-primary: #1f2937;
-            --text-secondary: #6b7280;
-            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+<script>
+    // Form handling
+    const form = document.getElementById('promptForm');
+    const improveBtn = document.getElementById('improveBtn');
+    const loading = document.getElementById('loading');
+    const outputSection = document.getElementById('outputSection');
+    const outputText = document.getElementById('outputText');
+    const copyBtn = document.getElementById('copyBtn');
+
+    // ✅ Use relative API path so it works on Render and any device
+    const API_URL = "/improve"; // MUST match @app.post("/improve")
+
+    form.addEventListener('submit', async(e) => {
+        e.preventDefault();
+        await improvePrompt();
+    });
+
+    async function improvePrompt() {
+        const input = document.getElementById('userPrompt').value.trim();
+
+        if (!input) {
+            alert('Please enter a prompt first! 💭');
+            return;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        // Show loading state
+        improveBtn.disabled = true;
+        loading.classList.remove('hidden');
+        outputSection.classList.add('hidden');
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            min-height: 100vh;
-            line-height: 1.6;
-            color: white;
-        }
+        const API_URL = "/improve";
 
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-            z-index: 1000;
-            padding: 1rem 0;
-        }
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    prompt: input
+                })
+            });
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white;
-            text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: white;
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 8rem 2rem 4rem;
-            text-align: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #fff 0%, #e0e7ff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Main App Container */
-        .app-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 2rem 4rem;
-        }
-
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-        }
-
-        /* Form Elements */
-        .form-group {
-            margin-bottom: 2rem;
-        }
-
-        .form-label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: white;
-        }
-
-        .form-textarea {
-            width: 100%;
-            min-height: 150px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 1.25rem;
-            color: white;
-            font-size: 1rem;
-            resize: vertical;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .form-textarea:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.4);
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
-        }
-
-        .form-textarea::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 16px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            width: 100%;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.9);
-            color: var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: white;
-            transform: translateY(-1px);
-        }
-
-        /* Output Section */
-        .output-section {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .output-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .output-title {
-            color: var(--accent);
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .output-text {
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.7;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        /* Loading State */
-        .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.1rem;
-        }
-
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--accent);
-            animation: spin 1s linear infinite;
-        }
-
-        /* Features Section */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin: 4rem 0;
-            padding: 0 2rem;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .feature-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .feature-description {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            color: rgba(255, 255, 255, 0.6);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Animations */
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Utilities */
-        .hidden { display: none; }
-        .text-center { text-align: center; }
-        .mt-2 { margin-top: 1rem; }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero { padding: 6rem 1rem 2rem; }
-            .glass-card { padding: 1.5rem; }
-            .features { grid-template-columns: 1fr; }
-        }
-    </style>
-</head>
-
-<body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="#" class="logo">🚀 AI Prompt Improver</a>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#about">About</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <h1>Transform Your AI Prompts</h1>
-        <p>Enhance your AI interactions with professionally structured prompts using Role, Objective, and Context framework</p>
-    </section>
-
-    <!-- Main Application -->
-    <main class="app-container">
-        <div class="glass-card">
-            <form id="promptForm">
-                <div class="form-group">
-                    <label for="userPrompt" class="form-label">Enter Your Prompt</label>
-                    <textarea 
-                        id="userPrompt" 
-                        class="form-textarea" 
-                        placeholder="Example: As a UI designer, your objective is to develop a prompt that will improve the performance of an AI prompt system."
-                        required
-                        aria-describedby="prompt-help"
-                    ></textarea>
-                    <small id="prompt-help" style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Describe what you want the AI to do, and we'll structure it for optimal results</small>
-                </div>
-                
-                <button type="submit" class="btn btn-primary" id="improveBtn">
-                    ✨ Improve My Prompt
-                </button>
-            </form>
-
-            <!-- Loading State -->
-            <div id="loading" class="loading hidden mt-2">
-                <div class="spinner"></div>
-                <span>Crafting your perfect prompt...</span>
-            </div>
-
-            <!-- Output Section -->
-            <div id="outputSection" class="output-section hidden">
-                <div class="output-header">
-                    <h3 class="output-title">✨ Your Improved Prompt</h3>
-                    <button type="button" class="btn btn-secondary" id="copyBtn">
-                        📋 Copy
-                    </button>
-                </div>
-                <div id="outputText" class="output-text"></div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="feature-card">
-            <div class="feature-icon">🎯</div>
-            <h3 class="feature-title">Role-Based Structure</h3>
-            <p class="feature-description">Define clear roles for AI to understand context and expectations</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🚀</div>
-            <h3 class="feature-title">Objective Clarity</h3>
-            <p class="feature-description">Specify precise objectives for better AI performance</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🧠</div>
-            <h3 class="feature-title">Context Enhancement</h3>
-            <p class="feature-description">Provide relevant context for more accurate responses</p>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <p>Developed by Yash Raygade | AI Prompt Improver © 2024</p>
-    </footer>
-
-    <script>
-        // Form handling
-        const form = document.getElementById('promptForm');
-        const improveBtn = document.getElementById('improveBtn');
-        const loading = document.getElementById('loading');
-        const outputSection = document.getElementById('outputSection');
-        const outputText = document.getElementById('outputText');
-        const copyBtn = document.getElementById('copyBtn');
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            await improvePrompt();
-        });
-
-        async function improvePrompt() {
-            const input = document.getElementById('userPrompt').value.trim();
-            
-            if (!input) {
-                alert('Please enter a prompt first! 💭');
+            if (!response.ok) {
+                let detail = '';
+                try {
+                    const err = await response.json();
+                    detail = err.detail || JSON.stringify(err);
+                } catch (_) {}
+                outputText.textContent =
+                    `❌ Server error (${response.status}). ${detail || ''}`;
+                outputSection.classList.remove('hidden');
                 return;
             }
 
-            // Show loading state
-            improveBtn.disabled = true;
-            loading.classList.remove('hidden');
-            outputSection.classList.add('hidden');
+            const data = await response.json();
 
-            try {
-                const response = await fetch('http://127.0.0.1:8000/improve', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ prompt: input })
-                });
-
-                const data = await response.json();
-                
-                // Show output
-                outputText.textContent = data.improved_prompt || 'Error: No output received';
-                outputSection.classList.remove('hidden');
-                
-                // Scroll to output
-                outputSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-            } catch (error) {
-                outputText.textContent = '❌ Connection Error: Could not connect to server. Make sure the backend is running.';
-                outputSection.classList.remove('hidden');
-            } finally {
-                // Hide loading state
-                loading.classList.add('hidden');
-                improveBtn.disabled = false;
-            }
-        }
-
-        // Copy functionality
-        copyBtn.addEventListener('click', async () => {
-            try {
-                await navigator.clipboard.writeText(outputText.textContent);
-                
-                // Visual feedback
-                const originalText = copyBtn.textContent;
-                copyBtn.textContent = '✅ Copied!';
-                copyBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-                copyBtn.style.color = 'white';
-                
-                setTimeout(() => {
-                    copyBtn.textContent = originalText;
-                    copyBtn.style.background = '';
-                    copyBtn.style.color = '';
-                }, 2000);
-            } catch (error) {
-                alert('Failed to copy to clipboard');
-            }
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                e.preventDefault();
-                improvePrompt();
-            }
-        });
-
-        // Smooth scrolling for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
+            outputText.textContent =
+                data.improved_prompt || 'Error: No output received';
+            outputSection.classList.remove('hidden');
+            outputSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest'
             });
+
+        } catch (error) {
+            console.error(error);
+            outputText.textContent =
+                '❌ Network error: Could not reach server.';
+            outputSection.classList.remove('hidden');
+        } finally {
+            loading.classList.add('hidden');
+            improveBtn.disabled = false;
+        }
+    }
+
+    // Copy functionality
+    copyBtn.addEventListener('click', async() => {
+        try {
+            await navigator.clipboard.writeText(outputText.textContent);
+
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = '✅ Copied!';
+            copyBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            copyBtn.style.color = 'white';
+
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+                copyBtn.style.background = '';
+                copyBtn.style.color = '';
+            }, 2000);
+        } catch (error) {
+            alert('Failed to copy to clipboard');
+        }
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            improvePrompt();
+        }
+    });
+
+    // Smooth scrolling for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
         });
-    </script>
-</body>
-</html>
+    });
+</script>
