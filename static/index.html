@@ -1,118 +1,434 @@
-<script>
-    // Form handling
-    const form = document.getElementById('promptForm');
-    const improveBtn = document.getElementById('improveBtn');
-    const loading = document.getElementById('loading');
-    const outputSection = document.getElementById('outputSection');
-    const outputText = document.getElementById('outputText');
-    const copyBtn = document.getElementById('copyBtn');
+<!DOCTYPE html>
+<html lang="en">
 
-    // ✅ Use relative API path so it works on Render and any device
-    const API_URL = "/improve"; // MUST match @app.post("/improve")
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered prompt improvement tool for better AI interactions">
+    <title>AI Prompt Improver - Enhance Your AI Conversations</title>
 
-    form.addEventListener('submit', async(e) => {
-        e.preventDefault();
-        await improvePrompt();
-    });
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    async function improvePrompt() {
-        const input = document.getElementById('userPrompt').value.trim();
-
-        if (!input) {
-            alert('Please enter a prompt first! 💭');
-            return;
+    <style>
+         :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            z-index: 50;
+            padding: 0.75rem 0;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .hero {
+            padding: 7rem 2rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            max-width: 600px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.05rem;
+        }
+        
+        .app-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem 3rem;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-textarea {
+            width: 100%;
+            min-height: 140px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(15, 23, 42, 0.35);
+            color: #fff;
+            padding: 1rem;
+            font-size: 0.98rem;
+            resize: vertical;
+        }
+        
+        .form-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .btn {
+            border-radius: 16px;
+            border: none;
+            padding: 0.85rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            font-size: 1.05rem;
+        }
+        
+        .loading {
+            display: none;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        
+        .loading.hidden {
+            display: none;
+        }
+        
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--accent);
+            animation: spin 1s linear infinite;
+        }
+        
+        .output-section {
+            margin-top: 1.5rem;
+            padding: 1.25rem 1.25rem 1.5rem;
+            background: rgba(15, 23, 42, 0.65);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+        
+        .output-section.visible {
+            display: block;
+        }
+        
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .output-title {
+            color: #22d3ee;
+            font-weight: 600;
+        }
+        
+        .btn-secondary {
+            font-size: 0.85rem;
+            background: #fff;
+            color: var(--primary-dark);
+            border-radius: 999px;
+            padding: 0.35rem 0.9rem;
+        }
+        
+        .output-text {
+            white-space: pre-wrap;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 0.98rem;
+        }
+        
+        .features {
+            max-width: 1100px;
+            margin: 2.5rem auto 0;
+            padding: 0 2rem 2.5rem;
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.09);
+            border-radius: 18px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.6rem;
+        }
+        
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+        
+        .feature-description {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.95rem;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .hero {
+                padding: 6rem 1rem 2.5rem;
+            }
+            .app-container {
+                padding: 0 1rem 2.5rem;
+            }
+            .features {
+                padding: 0 1rem 2rem;
+            }
+        }
+    </style>
+</head>
 
-        // Show loading state
-        improveBtn.disabled = true;
-        loading.classList.remove('hidden');
-        outputSection.classList.add('hidden');
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">🚀 AI Prompt Improver</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+            </ul>
+        </div>
+    </nav>
 
-        const API_URL = "/improve";
+    <section id="home" class="hero">
+        <h1>Transform Your AI Prompts</h1>
+        <p>Describe what you want the AI to do, and we'll structure it using Role, Objective, and Context for better responses.</p>
+    </section>
 
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    prompt: input
-                })
-            });
+    <main class="app-container">
+        <div class="glass-card">
+            <form id="promptForm">
+                <div class="form-group">
+                    <label class="form-label" for="userPrompt">Enter Your Prompt</label>
+                    <textarea id="userPrompt" class="form-textarea" placeholder="Example: As a UI designer, your objective is to develop a prompt that will improve the performance of an AI prompt system." required></textarea>
+                    <small style="color: rgba(255,255,255,0.75); font-size: 0.85rem;">
+                        Describe what you want the AI to do, and we'll structure it for optimal results.
+                    </small>
+                </div>
 
+                <button id="improveBtn" type="submit" class="btn btn-primary">
+                    ✨ Improve My Prompt
+                </button>
+            </form>
 
-            if (!response.ok) {
-                let detail = '';
-                try {
-                    const err = await response.json();
-                    detail = err.detail || JSON.stringify(err);
-                } catch (_) {}
-                outputText.textContent =
-                    `❌ Server error (${response.status}). ${detail || ''}`;
-                outputSection.classList.remove('hidden');
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <span>Crafting your perfect prompt...</span>
+            </div>
+
+            <div id="outputSection" class="output-section">
+                <div class="output-header">
+                    <h3 class="output-title">✨ Your Improved Prompt</h3>
+                    <button id="copyBtn" type="button" class="btn btn-secondary">
+                        📋 Copy
+                    </button>
+                </div>
+                <div id="outputText" class="output-text"></div>
+            </div>
+        </div>
+    </main>
+
+    <section id="features" class="features">
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3 class="feature-title">Role-Based Prompts</h3>
+            <p class="feature-description">Clearly define who the AI should act as for more focused responses.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🚀</div>
+            <h3 class="feature-title">Objective Clarity</h3>
+            <p class="feature-description">Specify the exact goal of the prompt so the AI knows what success looks like.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🧠</div>
+            <h3 class="feature-title">Context Awareness</h3>
+            <p class="feature-description">Provide relevant context for more accurate, useful responses.</p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        Developed by Yash Raygade | AI Prompt Improver © 2025
+    </footer>
+
+    <script>
+        const form = document.getElementById('promptForm');
+        const improveBtn = document.getElementById('improveBtn');
+        const loading = document.getElementById('loading');
+        const outputSection = document.getElementById('outputSection');
+        const outputText = document.getElementById('outputText');
+        const copyBtn = document.getElementById('copyBtn');
+
+        const API_URL = "/improve"; // works on Render and local server
+
+        form.addEventListener('submit', async(e) => {
+            e.preventDefault();
+            await improvePrompt();
+        });
+
+        async function improvePrompt() {
+            const input = document.getElementById('userPrompt').value.trim();
+            if (!input) {
+                alert('Please enter a prompt first! 💭');
                 return;
             }
 
-            const data = await response.json();
+            improveBtn.disabled = true;
+            loading.classList.remove('hidden');
+            outputSection.classList.remove('visible');
+            outputSection.style.display = 'none';
 
-            outputText.textContent =
-                data.improved_prompt || 'Error: No output received';
-            outputSection.classList.remove('hidden');
-            outputSection.scrollIntoView({
-                behavior: 'smooth',
-                block: 'nearest'
-            });
-
-        } catch (error) {
-            console.error(error);
-            outputText.textContent =
-                '❌ Network error: Could not reach server.';
-            outputSection.classList.remove('hidden');
-        } finally {
-            loading.classList.add('hidden');
-            improveBtn.disabled = false;
-        }
-    }
-
-    // Copy functionality
-    copyBtn.addEventListener('click', async() => {
-        try {
-            await navigator.clipboard.writeText(outputText.textContent);
-
-            const originalText = copyBtn.textContent;
-            copyBtn.textContent = '✅ Copied!';
-            copyBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-            copyBtn.style.color = 'white';
-
-            setTimeout(() => {
-                copyBtn.textContent = originalText;
-                copyBtn.style.background = '';
-                copyBtn.style.color = '';
-            }, 2000);
-        } catch (error) {
-            alert('Failed to copy to clipboard');
-        }
-    });
-
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-            e.preventDefault();
-            improvePrompt();
-        }
-    });
-
-    // Smooth scrolling for navigation
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth'
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        prompt: input
+                    })
                 });
+
+                if (!res.ok) {
+                    let detail = '';
+                    try {
+                        const err = await res.json();
+                        detail = err.detail || JSON.stringify(err);
+                    } catch (_) {}
+                    outputText.textContent =
+                        `❌ Server error (${res.status}). ${detail || ''}`;
+                } else {
+                    const data = await res.json();
+                    outputText.textContent =
+                        data.improved_prompt || 'No improved prompt returned.';
+                }
+
+                outputSection.style.display = 'block';
+                outputSection.classList.add('visible');
+                outputSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+
+            } catch (err) {
+                console.error(err);
+                outputText.textContent =
+                    '❌ Network error: Could not reach server.';
+                outputSection.style.display = 'block';
+                outputSection.classList.add('visible');
+            } finally {
+                loading.classList.add('hidden');
+                improveBtn.disabled = false;
+            }
+        }
+
+        copyBtn.addEventListener('click', async() => {
+            const text = outputText.textContent || '';
+            if (!text.trim()) return;
+
+            try {
+                await navigator.clipboard.writeText(text);
+                const original = copyBtn.textContent;
+                copyBtn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = original;
+                }, 1500);
+            } catch {
+                alert('Failed to copy to clipboard');
             }
         });
-    });
-</script>
+    </script>
+</body>
+
+</html>
