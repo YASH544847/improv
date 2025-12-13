@@ -1,259 +1,377 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="AI-powered prompt improvement tool for better AI interactions">
-    <title>AI Prompt Improver - Enhance Your AI Conversations</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>AI Prompt Improver</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    
     <style>
-         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #8b5cf6;
-            --accent: #06b6d4;
-            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        :root {
+            --primary: #ff6b35;
+            --primary-dark: #e55a2b;
+            --secondary: #ff8c42;
+            --accent: #ffa726;
+            --success: #ff6b35;
+            --dark: #1a1a1a;
+            --darker: #0f0f0f;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, #2a2a2a 100%);
             min-height: 100vh;
-            color: #fff;
+            color: white;
         }
-        
+
         .navbar {
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-            z-index: 50;
-            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--primary);
+            z-index: 1000;
+            padding: 1rem 0;
         }
-        
+
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0 2rem;
         }
-        
+
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #fff;
+            color: white;
             text-decoration: none;
         }
-        
+
         .nav-links {
             display: flex;
+            gap: 2rem;
             list-style: none;
-            gap: 1.5rem;
         }
-        
+
         .nav-links a {
             color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
             font-weight: 500;
+            transition: color 0.3s ease;
         }
-        
+
+        .nav-links a:hover {
+            color: white;
+        }
+
         .hero {
-            padding: 7rem 2rem 3rem;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
             max-width: 1200px;
             margin: 0 auto;
-            text-align: center;
         }
-        
+
         .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        
+
         .hero p {
+            font-size: 1.25rem;
+            color: var(--accent);
+            margin-bottom: 3rem;
             max-width: 600px;
-            margin: 0 auto;
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 1.05rem;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 500;
         }
-        
+
         .app-container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 0 2rem 3rem;
+            padding: 0 2rem 4rem;
         }
-        
+
         .glass-card {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 24px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
             padding: 2rem;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 25px 50px rgba(255, 107, 53, 0.1);
         }
-        
+
         .form-group {
             margin-bottom: 1.5rem;
         }
-        
+
         .form-label {
             display: block;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+            color: white;
         }
-        
+
         .form-textarea {
             width: 100%;
-            min-height: 140px;
+            min-height: 120px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--primary);
             border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            background: rgba(15, 23, 42, 0.35);
-            color: #fff;
-            padding: 1rem;
-            font-size: 0.98rem;
+            padding: 1.25rem;
+            color: white;
+            font-size: 1rem;
+            line-height: 1.6;
             resize: vertical;
+            margin-bottom: 1.5rem;
         }
-        
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
+        }
+
+        .form-select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--primary);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
+        }
+
+        .form-select option {
+            background: var(--darker);
+            color: white;
+            padding: 0.5rem;
+        }
+
         .form-textarea::placeholder {
             color: rgba(255, 255, 255, 0.6);
         }
-        
-        .btn {
-            border-radius: 16px;
-            border: none;
-            padding: 0.85rem 1.5rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        
+
         .btn-primary {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: #fff;
-            font-size: 1.05rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: none;
+            border-radius: 16px;
+            padding: 1rem 2rem;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
         }
-        
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .loading {
-            display: none;
-            margin-top: 1rem;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 0.75rem;
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            margin-top: 1rem;
         }
-        
+
         .loading.hidden {
             display: none;
         }
-        
+
         .spinner {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
+            width: 20px;
+            height: 20px;
             border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: var(--accent);
+            border-radius: 50%;
+            border-top-color: var(--primary);
             animation: spin 1s linear infinite;
         }
-        
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         .output-section {
             margin-top: 1.5rem;
-            padding: 1.25rem 1.25rem 1.5rem;
-            background: rgba(15, 23, 42, 0.65);
-            border-radius: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--primary);
+            border-radius: 16px;
+            padding: 1.5rem;
             display: none;
         }
-        
+
         .output-section.visible {
             display: block;
         }
-        
+
         .output-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .output-title {
+            color: var(--accent);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .btn-secondary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 999px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .output-text {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
         }
         
-        .output-title {
-            color: #22d3ee;
+        .output-text h1, .output-text h2, .output-text h3 {
+            color: var(--accent);
+            margin: 1.5rem 0 0.8rem 0;
             font-weight: 600;
         }
         
-        .btn-secondary {
-            font-size: 0.85rem;
-            background: #fff;
-            color: var(--primary-dark);
-            border-radius: 999px;
-            padding: 0.35rem 0.9rem;
+        .output-text h1 {
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
         }
         
-        .output-text {
-            white-space: pre-wrap;
-            color: rgba(255, 255, 255, 0.95);
-            font-size: 0.98rem;
+        .output-text h2 {
+            font-size: 1.2rem;
+            color: var(--primary);
         }
         
+        .output-text h3 {
+            font-size: 1.1rem;
+        }
+        
+        .output-text strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .output-text ul, .output-text ol {
+            margin: 0.8rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .output-text li {
+            margin: 0.4rem 0;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        
+        .output-text code {
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--accent);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
         .features {
             max-width: 1100px;
             margin: 2.5rem auto 0;
             padding: 0 2rem 2.5rem;
             display: grid;
             gap: 1.5rem;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         }
-        
+
         .feature-card {
-            background: rgba(255, 255, 255, 0.09);
-            border-radius: 18px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            padding: 2rem;
             text-align: center;
+            transition: all 0.3s ease;
         }
-        
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+        }
+
         .feature-icon {
-            font-size: 2.2rem;
-            margin-bottom: 0.6rem;
+            font-size: 3rem;
+            margin-bottom: 1rem;
         }
-        
+
         .feature-title {
+            font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 0.4rem;
+            margin-bottom: 1rem;
         }
-        
+
         .feature-description {
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
         }
-        
+
         .footer {
             text-align: center;
-            padding: 1.5rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.6);
+            border-top: 1px solid var(--primary);
         }
-        
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        
+
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -266,6 +384,7 @@
             }
             .features {
                 padding: 0 1rem 2rem;
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -292,13 +411,30 @@
             <form id="promptForm">
                 <div class="form-group">
                     <label class="form-label" for="userPrompt">Enter Your Prompt</label>
-                    <textarea id="userPrompt" class="form-textarea" placeholder="Example: As a UI designer, your objective is to develop a prompt that will improve the performance of an AI prompt system." required></textarea>
+                    <textarea id="userPrompt" class="form-textarea" placeholder="Example: Explain the history of the Maratha Empire, including key rulers, major battles, and their impact on Indian history." required></textarea>
                     <small style="color: rgba(255,255,255,0.75); font-size: 0.85rem;">
                         Describe what you want the AI to do, and we'll structure it for optimal results.
                     </small>
                 </div>
 
-                <button id="improveBtn" type="submit" class="btn btn-primary">
+                <div class="form-group">
+                    <label class="form-label" for="outputFormat">5) Output Format</label>
+                    <select id="outputFormat" class="form-select">
+                        <option value="structured">📋 Structured Response</option>
+                        <option value="bullet-points">• Bullet Points</option>
+                        <option value="step-by-step">📝 Step-by-Step Guide</option>
+                        <option value="json">📊 JSON Format</option>
+                        <option value="table">📋 Table Format</option>
+                        <option value="code">💻 Code Format</option>
+                        <option value="report">📄 Report Format</option>
+                        <option value="markdown">📝 Markdown Format</option>
+                    </select>
+                    <small style="color: rgba(255,255,255,0.75); font-size: 0.85rem;">
+                        Choose how you want the AI to format its response.
+                    </small>
+                </div>
+
+                <button id="improveBtn" type="submit" class="btn-primary">
                     ✨ Improve My Prompt
                 </button>
             </form>
@@ -311,7 +447,7 @@
             <div id="outputSection" class="output-section">
                 <div class="output-header">
                     <h3 class="output-title">✨ Your Improved Prompt</h3>
-                    <button id="copyBtn" type="button" class="btn btn-secondary">
+                    <button id="copyBtn" type="button" class="btn-secondary">
                         📋 Copy
                     </button>
                 </div>
@@ -350,7 +486,7 @@
         const outputText = document.getElementById('outputText');
         const copyBtn = document.getElementById('copyBtn');
 
-        const API_URL = "/improve"; // works on Render and local server
+        const API_URL = "http://127.0.0.1:8000/improve";
 
         form.addEventListener('submit', async(e) => {
             e.preventDefault();
@@ -364,6 +500,7 @@
                 return;
             }
 
+            // Show loading state
             improveBtn.disabled = true;
             loading.classList.remove('hidden');
             outputSection.classList.remove('visible');
@@ -376,7 +513,8 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        prompt: input
+                        prompt: input,
+                        output_format: document.getElementById('outputFormat').value
                     })
                 });
 
@@ -386,14 +524,17 @@
                         const err = await res.json();
                         detail = err.detail || JSON.stringify(err);
                     } catch (_) {}
-                    outputText.textContent =
-                        `❌ Server error (${res.status}). ${detail || ''}`;
+                    outputText.innerHTML = `<span style="color: #ff6b35;">❌ Server error (${res.status}). ${detail || ''}</span>`;
                 } else {
                     const data = await res.json();
-                    outputText.textContent =
-                        data.improved_prompt || 'No improved prompt returned.';
+                    const improvedPrompt = data.improved_prompt || 'No improved prompt returned.';
+                    const selectedFormat = document.getElementById('outputFormat').value;
+                    
+                    // Format the output with HTML for better presentation
+                    outputText.innerHTML = formatPromptOutput(improvedPrompt, selectedFormat);
                 }
 
+                // Show output section
                 outputSection.style.display = 'block';
                 outputSection.classList.add('visible');
                 outputSection.scrollIntoView({
@@ -403,32 +544,71 @@
 
             } catch (err) {
                 console.error(err);
-                outputText.textContent =
-                    '❌ Network error: Could not reach server.';
+                outputText.innerHTML = '<span style="color: #ff6b35;">❌ Network error: Could not reach server.</span>';
                 outputSection.style.display = 'block';
                 outputSection.classList.add('visible');
             } finally {
+                // Hide loading state
                 loading.classList.add('hidden');
                 improveBtn.disabled = false;
             }
         }
 
+        // Function to format prompt output with better styling
+        function formatPromptOutput(text, format = 'structured') {
+            // Add format instruction to the output
+            const formatInstruction = getFormatInstruction(format);
+            const formattedText = formatInstruction + '\n\n' + text;
+            
+            return formattedText
+                .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+                .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+                .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/^• (.+)$/gm, '<li>$1</li>')
+                .replace(/^\* (.+)$/gm, '<li>$1</li>')
+                .replace(/`(.+?)`/g, '<code>$1</code>')
+                .replace(/(\n\n)/g, '<br><br>')
+                .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+                .replace(/<\/ul>\s*<ul>/g, '');
+        }
+
+        // Function to get format instruction based on selected format
+        function getFormatInstruction(format) {
+            const instructions = {
+                'structured': '<div style="background: rgba(255, 107, 53, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 1rem;"><strong>📋 Output Format:</strong> Structured Response with clear sections and hierarchy</div>',
+                'bullet-points': '<div style="background: rgba(255, 107, 53, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 1rem;"><strong>• Output Format:</strong> Bullet Points - Concise, easy-to-scan format</div>',
+                'step-by-step': '<div style="background: rgba(255, 107, 53, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 1rem;"><strong>📝 Output Format:</strong> Step-by-Step Guide with numbered instructions</div>',
+                'json': '<div style="background: rgba(255, 107, 53, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 1rem;"><strong>📊 Output Format:</strong> JSON Format - Structured data format</div>',
+                'table': '<div style="background: rgba(255, 107, 53, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 1rem;"><strong>📋 Output Format:</strong> Table Format with rows and columns</div>',
+                'code': '<div style="background: rgba(255, 107, 53, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 1rem;"><strong>💻 Output Format:</strong> Code Format with syntax highlighting</div>',
+                'report': '<div style="background: rgba(255, 107, 53, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 1rem;"><strong>📄 Output Format:</strong> Report Format with executive summary</div>',
+                'markdown': '<div style="background: rgba(255, 107, 53, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 1rem;"><strong>📝 Output Format:</strong> Markdown Format with proper syntax</div>'
+            };
+            return instructions[format] || instructions['structured'];
+        }
+
         copyBtn.addEventListener('click', async() => {
-            const text = outputText.textContent || '';
+            // Get plain text for copying (strip HTML)
+            const text = outputText.innerText || outputText.textContent || '';
             if (!text.trim()) return;
 
             try {
                 await navigator.clipboard.writeText(text);
                 const original = copyBtn.textContent;
                 copyBtn.textContent = '✅ Copied!';
+                copyBtn.style.background = '#10b981';
+                copyBtn.style.color = '#fff';
+                
                 setTimeout(() => {
                     copyBtn.textContent = original;
-                }, 1500);
+                    copyBtn.style.background = '';
+                    copyBtn.style.color = '';
+                }, 2000);
             } catch {
                 alert('Failed to copy to clipboard');
             }
         });
     </script>
 </body>
-
 </html>

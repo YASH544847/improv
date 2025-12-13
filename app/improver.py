@@ -38,18 +38,28 @@ def improve_prompt(role, objective, context):
             "messages": [
                 {
                     "role": "system",
-                    "content": "You are an expert AI prompt engineer. Create clear, structured prompts that specify Role, Objective, and Context. Make the prompt actionable and specific."
+                    "content": "You are an expert AI prompt engineer. Create structured prompts with exactly 4 elements: Role, Objective, Constraints, and Context. Do not include any other sections."
                 },
                 {
                     "role": "user",
                     "content": f"""
-Create a professional, well-structured prompt using these components:
+Create a professional prompt using these components and format it with exactly these 4 sections only:
 
+Input:
 Role: {role}
 Objective: {objective}
 Context: {context}
 
-Format the output as a clear, actionable prompt that an AI assistant can follow effectively.
+Output format (use exactly this structure):
+**ROLE:** [Define who the AI should act as]
+
+**OBJECTIVE:** [Specify the exact goal or task]
+
+**CONSTRAINTS:** [List 2-3 key limitations or requirements]
+
+**CONTEXT:** [Provide relevant background information]
+
+Do not include token limits, tone, examples, quality criteria, thinking process, edge cases, iterations, or metadata.
                     """
                 }
             ]
