@@ -610,5 +610,23 @@
             }
         });
     </script>
+    
+    <script>
+    async function improvePrompt(prompt) {
+      const res = await fetch("/improve", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ prompt })
+      });
+    
+      if (!res.ok) {
+        throw new Error("Server error");
+      }
+    
+      return await res.json();
+    }
+    </script>
 </body>
 </html>
