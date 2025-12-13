@@ -1,13 +1,15 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Prompt Improver</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <style>
-        :root {
+         :root {
             --primary: #ff6b35;
             --primary-dark: #e55a2b;
             --secondary: #ff8c42;
@@ -16,20 +18,20 @@
             --dark: #1a1a1a;
             --darker: #0f0f0f;
         }
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, #2a2a2a 100%);
             min-height: 100vh;
             color: white;
         }
-
+        
         .navbar {
             position: fixed;
             top: 0;
@@ -40,7 +42,7 @@
             z-index: 1000;
             padding: 1rem 0;
         }
-
+        
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -49,38 +51,38 @@
             align-items: center;
             padding: 0 2rem;
         }
-
+        
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
             color: white;
             text-decoration: none;
         }
-
+        
         .nav-links {
             display: flex;
             gap: 2rem;
             list-style: none;
         }
-
+        
         .nav-links a {
             color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
         }
-
+        
         .nav-links a:hover {
             color: white;
         }
-
+        
         .hero {
             padding: 8rem 2rem 4rem;
             text-align: center;
             max-width: 1200px;
             margin: 0 auto;
         }
-
+        
         .hero h1 {
             font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 700;
@@ -90,7 +92,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
+        
         .hero p {
             font-size: 1.25rem;
             color: var(--accent);
@@ -100,13 +102,13 @@
             margin-right: auto;
             font-weight: 500;
         }
-
+        
         .app-container {
             max-width: 800px;
             margin: 0 auto;
             padding: 0 2rem 4rem;
         }
-
+        
         .glass-card {
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(10px);
@@ -115,18 +117,18 @@
             padding: 2rem;
             box-shadow: 0 25px 50px rgba(255, 107, 53, 0.1);
         }
-
+        
         .form-group {
             margin-bottom: 1.5rem;
         }
-
+        
         .form-label {
             display: block;
             font-weight: 600;
             margin-bottom: 0.75rem;
             color: white;
         }
-
+        
         .form-textarea {
             width: 100%;
             min-height: 120px;
@@ -140,14 +142,14 @@
             resize: vertical;
             margin-bottom: 1.5rem;
         }
-
+        
         .form-textarea:focus {
             outline: none;
             border-color: var(--accent);
             background: rgba(0, 0, 0, 0.6);
             box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
         }
-
+        
         .form-select {
             width: 100%;
             background: rgba(0, 0, 0, 0.4);
@@ -159,24 +161,24 @@
             margin-bottom: 1.5rem;
             cursor: pointer;
         }
-
+        
         .form-select:focus {
             outline: none;
             border-color: var(--accent);
             background: rgba(0, 0, 0, 0.6);
             box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
         }
-
+        
         .form-select option {
             background: var(--darker);
             color: white;
             padding: 0.5rem;
         }
-
+        
         .form-textarea::placeholder {
             color: rgba(255, 255, 255, 0.6);
         }
-
+        
         .btn-primary {
             width: 100%;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
@@ -190,17 +192,17 @@
             margin-bottom: 1.5rem;
             transition: transform 0.3s ease;
         }
-
+        
         .btn-primary:hover {
             transform: translateY(-2px);
         }
-
+        
         .btn-primary:disabled {
             opacity: 0.7;
             cursor: not-allowed;
             transform: none;
         }
-
+        
         .loading {
             display: flex;
             align-items: center;
@@ -210,11 +212,11 @@
             font-size: 1.1rem;
             margin-top: 1rem;
         }
-
+        
         .loading.hidden {
             display: none;
         }
-
+        
         .spinner {
             width: 20px;
             height: 20px;
@@ -223,11 +225,13 @@
             border-top-color: var(--primary);
             animation: spin 1s linear infinite;
         }
-
+        
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
-
+        
         .output-section {
             margin-top: 1.5rem;
             background: rgba(0, 0, 0, 0.7);
@@ -236,24 +240,24 @@
             padding: 1.5rem;
             display: none;
         }
-
+        
         .output-section.visible {
             display: block;
         }
-
+        
         .output-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-
+        
         .output-title {
             color: var(--accent);
             font-size: 1.2rem;
             font-weight: 600;
         }
-
+        
         .btn-secondary {
             background: var(--primary);
             color: white;
@@ -265,13 +269,13 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
+        
         .btn-secondary:hover {
             background: var(--accent);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
         }
-
+        
         .output-text {
             color: rgba(255, 255, 255, 0.9);
             line-height: 1.7;
@@ -281,7 +285,9 @@
             font-size: 0.95rem;
         }
         
-        .output-text h1, .output-text h2, .output-text h3 {
+        .output-text h1,
+        .output-text h2,
+        .output-text h3 {
             color: var(--accent);
             margin: 1.5rem 0 0.8rem 0;
             font-weight: 600;
@@ -307,7 +313,8 @@
             font-weight: 600;
         }
         
-        .output-text ul, .output-text ol {
+        .output-text ul,
+        .output-text ol {
             margin: 0.8rem 0;
             padding-left: 1.5rem;
         }
@@ -324,7 +331,7 @@
             border-radius: 4px;
             font-family: 'Courier New', monospace;
         }
-
+        
         .features {
             max-width: 1100px;
             margin: 2.5rem auto 0;
@@ -333,7 +340,7 @@
             gap: 1.5rem;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         }
-
+        
         .feature-card {
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
@@ -343,35 +350,35 @@
             text-align: center;
             transition: all 0.3s ease;
         }
-
+        
         .feature-card:hover {
             transform: translateY(-5px);
             border-color: var(--accent);
             box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
         }
-
+        
         .feature-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
         }
-
+        
         .feature-title {
             font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 1rem;
         }
-
+        
         .feature-description {
             color: rgba(255, 255, 255, 0.8);
         }
-
+        
         .footer {
             text-align: center;
             padding: 2rem;
             color: rgba(255, 255, 255, 0.6);
             border-top: 1px solid var(--primary);
         }
-
+        
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -486,7 +493,7 @@
         const outputText = document.getElementById('outputText');
         const copyBtn = document.getElementById('copyBtn');
 
-        const API_URL = "http://127.0.0.1:8000/improve";
+        const API_URL = "/improve";
 
         form.addEventListener('submit', async(e) => {
             e.preventDefault();
@@ -529,7 +536,7 @@
                     const data = await res.json();
                     const improvedPrompt = data.improved_prompt || 'No improved prompt returned.';
                     const selectedFormat = document.getElementById('outputFormat').value;
-                    
+
                     // Format the output with HTML for better presentation
                     outputText.innerHTML = formatPromptOutput(improvedPrompt, selectedFormat);
                 }
@@ -559,7 +566,7 @@
             // Add format instruction to the output
             const formatInstruction = getFormatInstruction(format);
             const formattedText = formatInstruction + '\n\n' + text;
-            
+
             return formattedText
                 .replace(/^# (.+)$/gm, '<h1>$1</h1>')
                 .replace(/^## (.+)$/gm, '<h2>$1</h2>')
@@ -599,7 +606,7 @@
                 copyBtn.textContent = '✅ Copied!';
                 copyBtn.style.background = '#10b981';
                 copyBtn.style.color = '#fff';
-                
+
                 setTimeout(() => {
                     copyBtn.textContent = original;
                     copyBtn.style.background = '';
@@ -611,22 +618,8 @@
         });
     </script>
     
-    <script>
-    async function improvePrompt(prompt) {
-      const res = await fetch("/improve", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ prompt })
-      });
-    
-      if (!res.ok) {
-        throw new Error("Server error");
-      }
-    
-      return await res.json();
-    }
-    </script>
+    <!-- IMPORTANT: script MUST be here -->
+    <script src="/static/script.js"></script>
 </body>
+
 </html>
